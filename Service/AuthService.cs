@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain;
-using Domain.DTOs;
-using Domain.DTOs.AdminDTOs;
+using Domain.DTOs.AuthDTOs;
 using Domain.Models;
 using Domain.Repositories;
 using Domain.Services;
@@ -30,7 +29,7 @@ namespace Service
             this.mapper = mapper;
         }
 
-        public async Task<ResponseModel<AuthDTO>> RegisterAsync(RegisterDocDTO model, string role)
+        public async Task<ResponseModel<AuthDTO>> RegisterAsync(RegisterDoctorDTO model, string role)
         {
             if (await unitOfWork.AuthRepository.EmailExistAsync(model.Email))
                 return new ResponseModel<AuthDTO> { Success = false, Message = "Email is already registered" };
@@ -90,7 +89,7 @@ namespace Service
             }
         }
 
-        public async Task<ResponseModel<AuthDTO>> LoginAsync(DocLoginDTO model)
+        public async Task<ResponseModel<AuthDTO>> LoginAsync(LoginDTO model)
         {
             var user = await unitOfWork.AuthRepository.GetUserByEmailAsync(model.Email);
 
@@ -118,7 +117,7 @@ namespace Service
             };
         }
 
-        public async Task<ResponseModel<AuthDTO>> UpdateAsync(EditDocDTO model)
+        public async Task<ResponseModel<AuthDTO>> UpdateAsync(EditDoctorDTO model)
         {
             var user = await unitOfWork.AuthRepository.GetUserByIdAsync(model.Id);
 

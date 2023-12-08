@@ -117,14 +117,11 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
-                    b.Property<int>("AppointmentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"), 1L, 1);
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("Days")
                         .HasColumnType("int");
@@ -135,7 +132,7 @@ namespace Repository.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.HasKey("AppointmentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
 
@@ -144,18 +141,11 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Models.Booking", b =>
                 {
-                    b.Property<int>("BookingId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"), 1L, 1);
-
-                    b.Property<int>("AppointmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DoctorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(450)");
@@ -163,14 +153,18 @@ namespace Repository.Migrations
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
 
-                    b.HasKey("BookingId");
+                    b.Property<int>("TimeId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AppointmentId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("PatientId");
 
-                    b.HasIndex("RequestId");
+                    b.HasIndex("RequestId")
+                        .IsUnique();
+
+                    b.HasIndex("TimeId")
+                        .IsUnique();
 
                     b.ToTable("Bookings");
                 });
@@ -183,7 +177,7 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("AppointmentId")
+                    b.Property<int>("AppointmentId")
                         .HasColumnType("int");
 
                     b.Property<TimeOnly>("Time")
@@ -204,19 +198,15 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("DoctorId")
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PatientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RequestState")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Requests");
                 });
@@ -394,43 +384,45 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Models.Booking", b =>
                 {
-                    b.HasOne("Domain.Models.Appointment", "Appointment")
-                        .WithOne("Booking")
-                        .HasForeignKey("Domain.Models.Booking", "AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Models.ApplicationUser", "Patient")
                         .WithMany("Bookings")
                         .HasForeignKey("PatientId");
 
                     b.HasOne("Domain.Models.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("RequestId")
+                        .WithOne("Booking")
+                        .HasForeignKey("Domain.Models.Booking", "RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Appointment");
+                    b.HasOne("Domain.Models.DayTime", "Time")
+                        .WithOne("Booking")
+                        .HasForeignKey("Domain.Models.Booking", "TimeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Patient");
 
                     b.Navigation("Request");
+
+                    b.Navigation("Time");
                 });
 
             modelBuilder.Entity("Domain.Models.DayTime", b =>
                 {
-                    b.HasOne("Domain.Models.Appointment", null)
+                    b.HasOne("Domain.Models.Appointment", "Appointment")
                         .WithMany("Time")
-                        .HasForeignKey("AppointmentId");
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
                 });
 
             modelBuilder.Entity("Domain.Models.Request", b =>
                 {
-                    b.HasOne("Domain.Models.ApplicationUser", "Doctor")
+                    b.HasOne("Domain.Models.ApplicationUser", null)
                         .WithMany("Requests")
-                        .HasForeignKey("DoctorId");
-
-                    b.Navigation("Doctor");
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -495,10 +487,18 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Models.Appointment", b =>
                 {
+                    b.Navigation("Time");
+                });
+
+            modelBuilder.Entity("Domain.Models.DayTime", b =>
+                {
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("Domain.Models.Request", b =>
+                {
                     b.Navigation("Booking")
                         .IsRequired();
-
-                    b.Navigation("Time");
                 });
 
             modelBuilder.Entity("Domain.Models.Specialization", b =>

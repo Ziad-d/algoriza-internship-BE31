@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.DTOs.AdminDTOs
+namespace Domain.DTOs.AuthDTOs
 {
-    public class EditDocDTO
+    public class EditDoctorDTO
     {
         [Required]
         public string Id { get; set; }

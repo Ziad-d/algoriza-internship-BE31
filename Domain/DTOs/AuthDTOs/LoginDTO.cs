@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTOs.AdminDTOs
+namespace Domain.DTOs.AuthDTOs
 {
-    public class DocLoginDTO
+    public class LoginDTO
     {
         [Required]
         [EmailAddress]

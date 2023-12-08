@@ -1,5 +1,4 @@
-﻿using Domain.DTOs;
-using Domain.Models;
+﻿using Domain.Models;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Domain.DTOs.AuthDTOs;
 
 namespace Repository.Repositories
 {

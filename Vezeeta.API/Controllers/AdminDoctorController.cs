@@ -1,6 +1,5 @@
 ﻿using Domain;
-using Domain.DTOs;
-using Domain.DTOs.AdminDTOs;
+using Domain.DTOs.AuthDTOs;
 using Domain.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +21,7 @@ namespace Vezeeta.API.Controllers
         }
 
         [HttpPost("registerDoctor")]
-        public async Task<IActionResult> Register([FromForm] RegisterDocDTO model)
+        public async Task<IActionResult> Register([FromForm] RegisterDoctorDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -35,25 +34,8 @@ namespace Vezeeta.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("doctorLogin")]
-        public async Task<IActionResult> LoginAsync([FromForm] DocLoginDTO model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var result = await authService.LoginAsync(model);
-
-            if (!result.Success)
-                return BadRequest(result);
-
-            if (result.Data.Roles.Contains("Doctor"))
-                return Ok(result);
-            else
-                return BadRequest(new ResponseModel<AuthDTO> { Message = "Invalid role!" });
-        }
-
         [HttpPut("updateDoctor")]
-        public async Task<IActionResult> RegisterAsync([FromForm] EditDocDTO model)
+        public async Task<IActionResult> RegisterAsync([FromForm] EditDoctorDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

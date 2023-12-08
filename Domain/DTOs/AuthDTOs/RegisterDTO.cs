@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTOs.AdminDTOs
+namespace Domain.DTOs.AuthDTOs
 {
-    public class RegisterDocDTO
+    public class RegisterDTO
     {
         [Required]
         [MaxLength(50, ErrorMessage = "First Name must not exceed 50 characters."),
@@ -32,9 +33,6 @@ namespace Domain.DTOs.AdminDTOs
 
         [Required]
         public Gender Gender { get; set; }
-
-        [Required]
-        public int SpecializeId { get; set; }
 
         public IFormFile? ImageFile { get; set; }
 

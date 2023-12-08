@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Domain.DTOs.AdminDTOs;
+using Domain.DTOs.AuthDTOs;
+using Domain.DTOs.DoctorDTOs;
 using Domain.Models;
 
 namespace Services.Helpers
@@ -8,7 +10,7 @@ namespace Services.Helpers
     {
         public AutoMapper()
         {
-            CreateMap<RegisterDocDTO, ApplicationUser>()
+            CreateMap<RegisterDoctorDTO, ApplicationUser>()
                 .ForMember(dest => dest.Image, opt => opt.Ignore());
 
             CreateMap<ApplicationUser, DoctorDTO>()
@@ -16,10 +18,14 @@ namespace Services.Helpers
             
             CreateMap<ApplicationUser, PatientDTO>();
 
-            CreateMap<EditDocDTO, ApplicationUser>()
+            CreateMap<EditDoctorDTO, ApplicationUser>()
                 .ForMember(dest => dest.Image, opt => opt.Ignore());
 
             CreateMap<Specialization, SpecializationDTO>();
+
+            CreateMap<AppointmentDTO, Appointment>()
+                .ForMember(dest => dest.Time, opt => opt.Ignore())
+                .ReverseMap();
         }
     }
 }

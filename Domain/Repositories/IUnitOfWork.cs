@@ -9,8 +9,12 @@ namespace Domain.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        IBaseRepository<Specialization> Specializations { get; }
         IUserRepository AuthRepository { get; }
+        IBaseRepository<Appointment> Appointments { get; }
+        IBaseRepository<Booking> Bookings { get; }
+        IBaseRepository<Specialization> Specializations { get; }
+        IBaseRepository<Request> Requests { get; }
+        IBaseRepository<DayTime> Time { get; }
 
         int Complete();
     }

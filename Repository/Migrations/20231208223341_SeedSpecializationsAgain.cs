@@ -4,7 +4,7 @@
 
 namespace Repository.Migrations
 {
-    public partial class SeedSpecializations : Migration
+    public partial class SeedSpecializationsAgain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,7 +77,7 @@ namespace Repository.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DELETE FROM [Specialization]");
+            migrationBuilder.Sql("DELETE FROM [Specializations]");
         }
     }
 }

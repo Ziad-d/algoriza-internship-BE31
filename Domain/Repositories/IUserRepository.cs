@@ -1,7 +1,7 @@
-﻿using Domain.DTOs;
-using Domain.Models;
+﻿using Domain.Models;
 using Domain;
 using System.Security.Claims;
+using Domain.DTOs.AuthDTOs;
 
 namespace Domain.Repositories
 {

@@ -1,6 +1,7 @@
 ﻿using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
@@ -21,9 +22,16 @@ namespace Domain.Models
         public DateTime DateOfBirth { get; set; }
 
         // Navigation property
+
+        [JsonIgnore]
         public virtual ICollection<Appointment>? Appointments { get; set; }
+
+        [JsonIgnore] 
         public virtual ICollection<Booking>? Bookings { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Request>? Requests { get; set; }
+
         public virtual Specialization? Specialize { get; set; }
 
     }

@@ -5,10 +5,9 @@ namespace Domain.Models
     public class Request
     {
         public int Id { get; set; }
-
         public RequestState RequestState { get; set; }
 
-        public string PatientId { get; set; }
-        public virtual ApplicationUser Doctor { get; set; }
+        // Navigation property
+        public virtual Booking Booking { get; set; }
     }
 }

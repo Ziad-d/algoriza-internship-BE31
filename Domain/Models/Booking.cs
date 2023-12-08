@@ -11,16 +11,17 @@ namespace Domain.Models
 {
     public class Booking
     {
-        [Key]
-        public int BookingId { get; set; }
-        public string DoctorId { get; set; }
+        public int Id { get; set; }
 
-        [ForeignKey("AppointmentForeignKey")]
-        public int AppointmentId { get; set; }
+        [ForeignKey("TimeForeignKey")]
+        public int TimeId { get; set; }
+
+        [ForeignKey("RequestForeignKey")]
+        public int RequestId { get; set; }
 
         // Navigation properties
         public virtual ApplicationUser Patient { get; set; }
-        public virtual Appointment Appointment { get; set; }
+        public virtual DayTime Time { get; set; }
         public virtual Request Request { get; set; }
     }
 }
