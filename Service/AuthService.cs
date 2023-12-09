@@ -29,7 +29,7 @@ namespace Service
             this.mapper = mapper;
         }
 
-        public async Task<ResponseModel<AuthDTO>> RegisterAsync(RegisterDoctorDTO model, string role)
+        public async Task<ResponseModel<AuthDTO>> RegisterAsync<TRegisterDTO>(TRegisterDTO model, string role) where TRegisterDTO : RegisterDTO
         {
             if (await unitOfWork.AuthRepository.EmailExistAsync(model.Email))
                 return new ResponseModel<AuthDTO> { Success = false, Message = "Email is already registered" };
@@ -39,28 +39,25 @@ namespace Service
 
             var imgUrl = await imageService.ValidateImage(model.ImageFile);
             if (imgUrl is null)
-            {
                 return new ResponseModel<AuthDTO> { Success = false, Message = "Image is not valid (must not exceed 2mb and allowed extensions are (.png, .jpg, .webp))" };
-            }
 
             ApplicationUser user = mapper.Map<ApplicationUser>(model);
             user.Image = imgUrl;
 
             Specialization specialize = new Specialization();
 
-            if (role == "Doctor")
+            if (model is RegisterDoctorDTO doctorModel)
             {
-                specialize = await unitOfWork.Specializations.GetByIdAsync(model.SpecializeId);
+                specialize = await unitOfWork.Specializations.GetByIdAsync(doctorModel.SpecializeId);
 
                 if (specialize is null)
-                {
-                    return new ResponseModel<AuthDTO> { Success = false, Message = "No specialize match that id: " + model.SpecializeId };
-                }
+                    return new ResponseModel<AuthDTO> { Success = false, Message = "No specialize match that id: " + doctorModel.SpecializeId };
 
                 user.Specialize = specialize;
             }
 
             var result = await unitOfWork.AuthRepository.RegisterAsync(user, model.Password);
+
             if (result.Success)
             {
                 await unitOfWork.AuthRepository.AddUserToRole(user, role);

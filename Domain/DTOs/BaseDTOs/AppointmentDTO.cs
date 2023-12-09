@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTOs.DoctorDTOs
+namespace Domain.DTOs.BaseDTOs
 {
     public class AppointmentDTO
     {
         public int Price { get; set; }
         public Days Days { get; set; }
-        public virtual ICollection<TimeOnly> TimeOnly { get; set; }
     }
 }

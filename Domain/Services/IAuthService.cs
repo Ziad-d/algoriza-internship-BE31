@@ -11,7 +11,7 @@ namespace Domain.Services
 {
     public interface IAuthService
     {
-        Task<ResponseModel<AuthDTO>> RegisterAsync(RegisterDoctorDTO model, string role);
+        Task<ResponseModel<AuthDTO>> RegisterAsync<TRegisterDTO>(TRegisterDTO model, string role) where TRegisterDTO : RegisterDTO;
         Task<ResponseModel<AuthDTO>> LoginAsync(LoginDTO model);
         Task<ResponseModel<AuthDTO>> UpdateAsync(EditDoctorDTO model);
         Task<ResponseModel<AuthDTO>> DeleteAsync(string id);
