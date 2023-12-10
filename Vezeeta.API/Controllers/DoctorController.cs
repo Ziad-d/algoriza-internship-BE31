@@ -45,7 +45,21 @@ namespace Vezeeta.API.Controllers
         {
             var userId = User.FindFirst("uid")?.Value;
 
-            var result = await doctorService.GetApointmentsAsync(userId, page, pageSize);
+            var result = await doctorService.GetAppointmentsAsync(userId, page, pageSize);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPut("confirmCheckUp/id={bookingId}")]
+        public async Task<IActionResult> ConfirmCheckUpsAsync(int bookingId)
+        {
+            var userId = User.FindFirst("uid")?.Value;
+
+            var result = await doctorService.ConfirmCheckUpsAsync(userId, bookingId);
 
             if (!result.Success)
                 return BadRequest(result);
@@ -55,7 +69,7 @@ namespace Vezeeta.API.Controllers
 
         [Authorize(Roles = "Doctor")]
         [HttpPost("AddAppointment")]
-        public async Task<IActionResult> AddAppointmentAsync([FromForm] AppointmentDTO appointment)
+        public async Task<IActionResult> AddAppointmentAsync([FromForm] AppointmentDoctorDTO appointment)
         {
             var userId = User.FindFirst("uid")?.Value;
 
@@ -69,7 +83,7 @@ namespace Vezeeta.API.Controllers
 
         [Authorize(Roles = "Doctor")]
         [HttpPut("updateAppointment/id={appointmentId}")]
-        public async Task<IActionResult> UpdateAppointmentAsync([FromForm] AppointmentDTO appointment, int appointmentId)
+        public async Task<IActionResult> UpdateAppointmentAsync([FromForm] AppointmentDoctorDTO appointment, int appointmentId)
         {
             var userId = User.FindFirst("uid")?.Value;
 

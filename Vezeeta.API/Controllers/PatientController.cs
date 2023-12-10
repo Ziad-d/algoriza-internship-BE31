@@ -51,7 +51,7 @@ namespace Vezeeta.API.Controllers
 
         [Authorize(Roles = "Patient")]
         [HttpGet("getDoctorsAppointments")]
-        public async Task<IActionResult> GetAllDoctorsAppointments(string search = "", int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetAllDoctorAppointments(string search = "", int page = 1, int pageSize = 5)
         {
             var result = await patientService.GetAllAppointmentsAsync(search, page, pageSize);
 
@@ -63,11 +63,39 @@ namespace Vezeeta.API.Controllers
 
         [Authorize(Roles = "Patient")]
         [HttpGet("book/id={timeId}")]
-        public async Task<IActionResult> Booking(int timeId)
+        public async Task<IActionResult> BookAsync(int timeId)
         {
             var userId = User.FindFirst("uid")?.Value;
 
             var result = await patientService.BookAppointmentAsync(userId, timeId);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Patient")]
+        [HttpGet("getAllBookings")]
+        public async Task<IActionResult> GetAllBookingsAsync(int page = 1, int pageSize = 5)
+        {
+            var userId = User.FindFirst("uid")?.Value;
+
+            var result = await patientService.GetAllBookingsAsync(userId, page, pageSize);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Patient")]
+        [HttpDelete("cancelBooking/id={bookingId}")]
+        public async Task<IActionResult> CancelBookingAsync(int bookingId)
+        {
+            var userId = User.FindFirst("uid")?.Value;
+
+            var result = await patientService.CancelBookingAsync(userId, bookingId);
 
             if (!result.Success)
                 return BadRequest(result);

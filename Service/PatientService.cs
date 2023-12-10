@@ -94,6 +94,47 @@ namespace Service
 
             return new ResponseModel<IEnumerable<AllDoctorsDTO>> { Message = "Doctors and thier appointments are retrieved.", Success = true, Data = doctorsAppointments, MetaData = meta };
         }
+        public async Task<ResponseModel<IEnumerable<BookingDTO>>> GetAllBookingsAsync(string patientId, int page = 1, int pageSize = 5)
+        {
+            var bookings = await unitOfWork.Bookings.GetAllPaginatedFilteredAsync(b => b.Patient.Id == patientId, page, pageSize);
 
+            var meta = new Metadata
+            {
+                Page = page,
+                PageSize = pageSize,
+                Next = page + 1,
+                Previous = page - 1
+            };
+
+            return new ResponseModel<IEnumerable<BookingDTO>> { Message = "Bookings retrieved", Success = true, Data = mapper.Map<IEnumerable<BookingDTO>>(bookings), MetaData = meta };
+        }
+        public async Task<ResponseModel<Booking>> CancelBookingAsync(string patientId, int bookingId)
+        {
+            var patient = await unitOfWork.AuthRepository.GetUserByIdAsync(patientId);
+
+            var booking = await unitOfWork.Bookings.GetByIdAsync(bookingId);
+
+            if (booking is null)
+                return new ResponseModel<Booking> { Message = "No such booking with that ID" };
+
+            if (!patient.Bookings.Any(b => b.Id == booking.Id))
+                return new ResponseModel<Booking> { Message = "No such booking with that ID" };
+
+            var request = booking.Request;
+
+            unitOfWork.Bookings.Delete(booking);
+
+            try
+            {
+                request.RequestState = RequestState.Cancelled;
+                unitOfWork.Complete();
+            }
+            catch (DbUpdateException)
+            {
+                return new ResponseModel<Booking> { Message = "Something went wrong" };
+            }
+
+            return new ResponseModel<Booking> { Success = true, Message = "Booking canceled", Data = booking };
+        }
     }
 }

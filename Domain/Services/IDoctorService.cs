@@ -12,9 +12,10 @@ namespace Domain.Services
 {
     public interface IDoctorService
     {
-        Task<ResponseModel<Appointment>> CreateAppointmentAsync(AppointmentDTO appointmentDTO, string doctorId);
-        Task<ResponseModel<IEnumerable<AppointmentDTO>>> GetApointmentsAsync(string doctorId, int page = 1, int pageSize = 5);
-        Task<ResponseModel<Appointment>> UpdateAppointmentAsync(int appointmentId, AppointmentDTO appointmentDTO, string doctorId);
+        Task<ResponseModel<IEnumerable<AppointmentDoctorDTO>>> GetAppointmentsAsync(string doctorId, int page = 1, int pageSize = 5);
+        Task<ResponseModel<string>> ConfirmCheckUpsAsync(string doctorId, int bookingId);
+        Task<ResponseModel<Appointment>> CreateAppointmentAsync(AppointmentDoctorDTO appointmentDTO, string doctorId);
+        Task<ResponseModel<Appointment>> UpdateAppointmentAsync(int appointmentId, AppointmentDoctorDTO appointmentDTO, string doctorId);
         Task<ResponseModel<Appointment>> DeleteAppointmentAsync(int appointmentId, string doctorId);
     }
 }

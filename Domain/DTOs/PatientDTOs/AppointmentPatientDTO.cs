@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.DTOs.PatientDTOs
 {
-    public class AppointmentPatientDTO : BaseDTOs.AppointmentDTO
+    public class AppointmentPatientDTO : AppointmentDTO
     {
         public virtual ICollection<TimeDTO> Time { get; set; }
     }

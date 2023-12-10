@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs.PatientDTOs;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace Domain.Services
     {
         Task<ResponseModel<BookingDTO>> BookAppointmentAsync(string patientId, int timeId);
         Task<ResponseModel<IEnumerable<AllDoctorsDTO>>> GetAllAppointmentsAsync(string search, int page = 1, int pageSize = 5);
+        Task<ResponseModel<IEnumerable<BookingDTO>>> GetAllBookingsAsync(string patientId, int page = 1, int pageSize = 5);
+        Task<ResponseModel<Booking>> CancelBookingAsync(string patientId, int bookingId);
     }
 }

@@ -13,6 +13,7 @@ namespace Domain.Models
         public DiscountType DiscountType { get; set; }
         public int Value { get; set; }
         public bool IsActive { get; set; }
+        public int BookingsNumber { get; set; }
 
         // Navigation property
         public virtual List<Booking> Bookings { get; set; }
