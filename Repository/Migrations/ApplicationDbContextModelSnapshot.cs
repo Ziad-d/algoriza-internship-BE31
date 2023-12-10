@@ -37,6 +37,9 @@ namespace Repository.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DiscountCodeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -102,6 +105,8 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DiscountCodeId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -136,7 +141,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Domain.Models.Booking", b =>
@@ -146,6 +151,9 @@ namespace Repository.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("FinalPrice")
+                        .HasColumnType("int");
 
                     b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(450)");
@@ -166,7 +174,7 @@ namespace Repository.Migrations
                     b.HasIndex("TimeId")
                         .IsUnique();
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("Domain.Models.DayTime", b =>
@@ -187,7 +195,61 @@ namespace Repository.Migrations
 
                     b.HasIndex("AppointmentId");
 
-                    b.ToTable("Times", (string)null);
+                    b.ToTable("Times");
+                });
+
+            modelBuilder.Entity("Domain.Models.DiscountCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BookingsNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("Domain.Models.ExpiredCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DiscountCodeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountCodeId");
+
+                    b.ToTable("ExpiredCodes");
                 });
 
             modelBuilder.Entity("Domain.Models.Request", b =>
@@ -201,6 +263,9 @@ namespace Repository.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsDiscountUsed")
+                        .HasColumnType("bit");
+
                     b.Property<int>("RequestState")
                         .HasColumnType("int");
 
@@ -208,7 +273,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Requests", (string)null);
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("Domain.Models.Specialization", b =>
@@ -228,7 +293,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specializations", (string)null);
+                    b.ToTable("Specializations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -366,6 +431,10 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Models.ApplicationUser", b =>
                 {
+                    b.HasOne("Domain.Models.DiscountCode", null)
+                        .WithMany("Patients")
+                        .HasForeignKey("DiscountCodeId");
+
                     b.HasOne("Domain.Models.Specialization", "Specialize")
                         .WithMany("Doctors")
                         .HasForeignKey("SpecializeId");
@@ -416,6 +485,17 @@ namespace Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("Appointment");
+                });
+
+            modelBuilder.Entity("Domain.Models.ExpiredCode", b =>
+                {
+                    b.HasOne("Domain.Models.DiscountCode", "DiscountCode")
+                        .WithMany()
+                        .HasForeignKey("DiscountCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiscountCode");
                 });
 
             modelBuilder.Entity("Domain.Models.Request", b =>
@@ -493,6 +573,11 @@ namespace Repository.Migrations
             modelBuilder.Entity("Domain.Models.DayTime", b =>
                 {
                     b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("Domain.Models.DiscountCode", b =>
+                {
+                    b.Navigation("Patients");
                 });
 
             modelBuilder.Entity("Domain.Models.Request", b =>
