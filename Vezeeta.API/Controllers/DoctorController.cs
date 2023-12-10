@@ -68,8 +68,8 @@ namespace Vezeeta.API.Controllers
         }
 
         [Authorize(Roles = "Doctor")]
-        [HttpPost("AddAppointment")]
-        public async Task<IActionResult> AddAppointmentAsync([FromForm] AppointmentDoctorDTO appointment)
+        [HttpPost("CreateAppointment")]
+        public async Task<IActionResult> CreateAppointmentAsync([FromForm] AppointmentDTO appointment)
         {
             var userId = User.FindFirst("uid")?.Value;
 
@@ -83,7 +83,7 @@ namespace Vezeeta.API.Controllers
 
         [Authorize(Roles = "Doctor")]
         [HttpPut("updateAppointment/id={appointmentId}")]
-        public async Task<IActionResult> UpdateAppointmentAsync([FromForm] AppointmentDoctorDTO appointment, int appointmentId)
+        public async Task<IActionResult> UpdateAppointmentAsync([FromForm] AppointmentDTO appointment, int appointmentId)
         {
             var userId = User.FindFirst("uid")?.Value;
 

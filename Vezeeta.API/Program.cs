@@ -66,6 +66,7 @@ namespace Vezeeta.API
             builder.Services.AddTransient<IAuthService, AuthService>();
             builder.Services.AddTransient<IAdminDoctorService, AdminDoctorService>();
             builder.Services.AddTransient<IAdminPatientService, AdminPatientService>();
+            builder.Services.AddTransient<IDiscountCodeService, DiscountCodeService>();
             builder.Services.AddTransient<IDoctorService, DoctorService>();
             builder.Services.AddTransient<IPatientService, PatientService>();
             builder.Services.AddTransient<IImageService, ImageService>();

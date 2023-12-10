@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DTOs.PatientDTOs
+namespace Domain.Models
 {
-    public class BookingPatientDTO
+    public class ExpiredCode
     {
         public int Id { get; set; }
         public string PatientId { get; set; }
-        public string PatientName { get; set; }
-        public RequestStateDTO State { get; set; }
-        public int FinalPrice { get; set; }
+        public virtual DiscountCode DiscountCode { get; set; }
     }
 }

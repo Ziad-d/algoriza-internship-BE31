@@ -135,6 +135,12 @@ namespace Repository.Repositories
             return await userManager.CheckPasswordAsync(user, password);
         }
 
+        public async Task<int> GetUsersInRoleCount(string roleName)
+        {
+            var usersInRole = await userManager.GetUsersInRoleAsync(roleName);
+            return usersInRole.Count;
+        }
+
         //public async Task<bool> RoleExistsAsync(string role)
         //{
         //    return await roleManager.RoleExistsAsync(role);

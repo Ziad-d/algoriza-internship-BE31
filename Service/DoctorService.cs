@@ -27,7 +27,7 @@ namespace Service
             this.mapper = mapper;
         }
 
-        public async Task<ResponseModel<IEnumerable<AppointmentDoctorDTO>>> GetAppointmentsAsync(string doctorId, int page = 1, int pageSize = 5)
+        public async Task<ResponseModel<IEnumerable<AppointmentDTO>>> GetAppointmentsAsync(string doctorId, int page = 1, int pageSize = 5)
         {
             var appointments = await unitOfWork.Appointments.GetAllPaginatedFilteredAsync(a => a.Doctor.Id == doctorId, page, pageSize);
 
@@ -39,7 +39,7 @@ namespace Service
                 Previous = page - 1
             };
 
-            return new ResponseModel<IEnumerable<AppointmentDoctorDTO>> { Success = true, Message = "Appointments retrieved.", Data = mapper.Map<IEnumerable<AppointmentDoctorDTO>>(appointments), MetaData = meta };
+            return new ResponseModel<IEnumerable<AppointmentDTO>> { Success = true, Message = "Appointments retrieved.", Data = mapper.Map<IEnumerable<AppointmentDTO>>(appointments), MetaData = meta };
         }
         public async Task<ResponseModel<string>> ConfirmCheckUpsAsync(string doctorId, int bookingId)
         {
@@ -69,14 +69,16 @@ namespace Service
 
             return new ResponseModel<string> { Message = "Booking confirmed", Success = true, Data = "" };
         }
-        public async Task<ResponseModel<Appointment>> CreateAppointmentAsync(AppointmentDoctorDTO appointmentDTO, string doctorId)
+        public async Task<ResponseModel<Appointment>> CreateAppointmentAsync(AppointmentDTO appointmentDTO, string doctorId)
         {
             var doctor = await unitOfWork.AuthRepository.GetUserByIdAsync(doctorId);
 
             var appointment = mapper.Map<Appointment>(appointmentDTO);
 
             appointment.Doctor = doctor;
-            appointment.Time = appointmentDTO.Time.Select(t => new DayTime { Time = t }).ToList();
+
+            if (appointmentDTO.TimeOnly != null)
+                appointment.Time = appointmentDTO.TimeOnly.Select(t => new DayTime { Time = t }).ToList();
 
             var currentAppointments = await unitOfWork.Appointments.GetAllPaginatedFilteredAsync(
                 a => a.Doctor.Id == doctorId && a.Days == appointmentDTO.Days, 1, 7);
@@ -97,7 +99,7 @@ namespace Service
 
             return new ResponseModel<Appointment> { Success = true, Message = "New appointment is added successfully.", Data = appointment };
         }
-        public async Task<ResponseModel<Appointment>> UpdateAppointmentAsync(int appointmentId, AppointmentDoctorDTO appointmentDTO, string doctorId)
+        public async Task<ResponseModel<Appointment>> UpdateAppointmentAsync(int appointmentId, AppointmentDTO appointmentDTO, string doctorId)
         {
             var doctor = await unitOfWork.AuthRepository.GetUserByIdAsync(doctorId);
 
@@ -112,7 +114,7 @@ namespace Service
             mapper.Map(appointmentDTO, appointment);
 
             appointment.Doctor = doctor;
-            appointment.Time = appointmentDTO.Time.Select(t => new DayTime { Time = t }).ToList();
+            appointment.Time = appointmentDTO.TimeOnly.Select(t => new DayTime { Time = t }).ToList();
 
             try
             {

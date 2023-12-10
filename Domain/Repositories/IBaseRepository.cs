@@ -11,6 +11,8 @@ namespace Domain.Repositories
     {
         Task<IEnumerable<T>> GetAllPaginatedFilteredAsync(Expression<Func<T, bool>> filterCriteria, int page = 1, int count = 5);
         Task<T> GetByIdAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllByPropertyAsync(Expression<Func<T, bool>> criteria);
         Task<T> CreateAsync(T entity);
         T Update(T entity);
         T Delete(T entity);

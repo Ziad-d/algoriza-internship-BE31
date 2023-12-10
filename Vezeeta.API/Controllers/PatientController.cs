@@ -36,7 +36,7 @@ namespace Vezeeta.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
+        public async Task<IActionResult> LoginAsync([FromForm] LoginDTO model)
         {
             var result = await authService.LoginAsync(model);
 

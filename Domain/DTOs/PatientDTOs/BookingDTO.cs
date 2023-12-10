@@ -12,8 +12,11 @@ namespace Domain.DTOs.PatientDTOs
         public int Id { get; set; }
         public int TimeId { get; set; }
         public TimeOnly Time { get; set; }
-        public Days Days { get; set; }
         public string DoctorName { get; set; }
+        public Days Days { get; set; }
         public RequestState RequestState { get; set; }
+        public int Price { get; set; }
+        public int FinalPrice { get; set; }
+
     }
 }

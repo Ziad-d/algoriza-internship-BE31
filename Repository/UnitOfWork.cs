@@ -3,6 +3,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
+using static Azure.Core.HttpHeader;
 
 namespace Repository
 {
@@ -16,6 +17,8 @@ namespace Repository
         public IBaseRepository<Specialization> Specializations { get; private set; }
         public IBaseRepository<Request> Requests { get; private set; }
         public IBaseRepository<DayTime> Time { get; private set; }
+        public IBaseRepository<DiscountCode> DiscountCodes { get; private set; }
+        public IBaseRepository<ExpiredCode> ExpiredCodes { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -26,6 +29,8 @@ namespace Repository
             Specializations = new BaseRepository<Specialization>(context);
             Requests = new BaseRepository<Request>(context);
             Time = new BaseRepository<DayTime>(context);
+            DiscountCodes = new BaseRepository<DiscountCode>(context);
+            ExpiredCodes = new BaseRepository<ExpiredCode>(context);
         }
 
         public int Complete()

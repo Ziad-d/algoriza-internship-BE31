@@ -19,6 +19,7 @@ namespace Domain.Repositories
         Task<bool> EmailExistAsync(string email);
         Task<bool> UserNameExistAsync(string userName);
         Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
+        Task<int> GetUsersInRoleCount(string roleName);
         //Task<bool> RoleExistsAsync(string role);
         //Task<bool> IsInRoleAsync(ApplicationUser user, string role);
     }

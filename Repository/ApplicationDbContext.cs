@@ -30,5 +30,7 @@ namespace Repository
         public DbSet<DayTime> Times { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<Specialization> Specializations { get; set; }
+        public DbSet<DiscountCode> Discounts { get; set; }
+        public DbSet<ExpiredCode> ExpiredCodes { get; set; }
     }
 }

@@ -136,7 +136,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Booking", b =>
@@ -166,7 +166,7 @@ namespace Repository.Migrations
                     b.HasIndex("TimeId")
                         .IsUnique();
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.DayTime", b =>
@@ -187,7 +187,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("AppointmentId");
 
-                    b.ToTable("Times");
+                    b.ToTable("Times", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Request", b =>
@@ -208,7 +208,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Specialization", b =>
@@ -228,7 +228,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specializations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

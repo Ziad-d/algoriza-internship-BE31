@@ -15,7 +15,9 @@ namespace Domain.Repositories
         IBaseRepository<Specialization> Specializations { get; }
         IBaseRepository<Request> Requests { get; }
         IBaseRepository<DayTime> Time { get; }
-
+        IBaseRepository<DiscountCode> DiscountCodes { get; }
+        IBaseRepository<ExpiredCode> ExpiredCodes { get; }
+        
         int Complete();
     }
 }

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Domain.DTOs.PatientDTOs;
 using Domain.Enums;
 using Domain.Utilities;
+using static Azure.Core.HttpHeader;
 
 namespace Service
 {
@@ -35,10 +36,8 @@ namespace Service
 
             var time = await unitOfWork.Time.GetByIdAsync(timeId);
 
-            if (time.Booking is not null)
-            {
+            if ((time != null && time.Booking is not null))
                 return new ResponseModel<BookingDTO> { Message = "There's an appointment at this time" };
-            }
 
             var request = new Request
             {
@@ -135,6 +134,90 @@ namespace Service
             }
 
             return new ResponseModel<Booking> { Success = true, Message = "Booking canceled", Data = booking };
+        }
+        public async Task<ResponseModel<BookingDTO>> FinalPriceAsync(int codeId, ApplicationUser patient, string patientId, Booking booking, DayTime time)
+        {
+
+            if (codeId != 0)
+            {
+                var code = await unitOfWork.DiscountCodes.GetByIdAsync(codeId);
+
+                if (code is null || !code.IsActive)
+                {
+                    return new ResponseModel<BookingDTO> { Message = "No such code available." };
+                }
+
+                if (code.Patients.Where(p => p.Id == patientId).Count() == 0)
+                {
+                    return new ResponseModel<BookingDTO> { Message = "No discount code is rewarded" };
+                }
+
+                var expiredCodes = await unitOfWork.ExpiredCodes.GetAllByPropertyAsync(u => u.PatientId == patientId);
+
+                foreach (var expiredCode in expiredCodes)
+                {
+                    if (expiredCode.DiscountCode == code)
+                    {
+                        return new ResponseModel<BookingDTO> { Message = "Code expired" };
+                    }
+                }
+
+                if (code.DiscountType == DiscountType.Value)
+                {
+                    booking.FinalPrice = time.Appointment.Price - code.Discount;
+                }
+                else
+                {
+                    booking.FinalPrice = time.Appointment.Price * (code.Discount / 100);
+                }
+
+                foreach (var patientRequest in patient.Requests)
+                {
+                    patientRequest.IsDiscountUsed = true;
+                }
+
+                await unitOfWork.ExpiredCodes.CreateAsync(new ExpiredCode
+                {
+                    PatientId = patientId,
+                    DiscountCode = code
+                });
+            }
+            else
+            {
+                var codes = await unitOfWork.DiscountCodes.GetAllAsync();
+
+                foreach (var availableCodes in codes)
+                {
+                    if (availableCodes.BookingsNumber == patient.Requests.Where(r => r.RequestState == RequestState.Completed && !r.IsDiscountUsed).Count())
+                    {
+                        availableCodes.Patients.Add(patient);
+                    }
+                }
+                booking.FinalPrice = time.Appointment.Price;
+            }
+
+            await unitOfWork.Bookings.CreateAsync(booking);
+            try
+            {
+                unitOfWork.Complete();
+            }
+            catch (DbUpdateException)
+            {
+                return new ResponseModel<BookingDTO> { Message = "Something went wrong." };
+            }
+
+            var bookingDTO = new BookingDTO
+            {
+                Price = time.Appointment.Price,
+                FinalPrice = booking.FinalPrice,
+                Id = booking.Id,
+                TimeId = time.Id,
+                Time = time.Time,
+                RequestState = booking.Request.RequestState,
+                DoctorName = time.Appointment.Doctor.FirstName + " " + time.Appointment.Doctor.LastName,
+            };
+
+            return new ResponseModel<BookingDTO> { Message = "Appointment is booked successfully", Success = true, Data = bookingDTO };
         }
     }
 }

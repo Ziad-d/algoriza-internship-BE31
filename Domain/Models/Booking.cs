@@ -18,6 +18,7 @@ namespace Domain.Models
 
         [ForeignKey("RequestForeignKey")]
         public int RequestId { get; set; }
+        public int FinalPrice { get; set; }
 
         // Navigation properties
         public virtual ApplicationUser Patient { get; set; }
