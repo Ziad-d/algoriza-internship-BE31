@@ -48,11 +48,5 @@ namespace Vezeeta.API.Controllers
 
             return Ok(specialization);
         }
-
-        [HttpGet("topTenDoctors")]
-        public async Task<IActionResult> GetTopTenDoctors()
-        {
-            return Ok();
-        }
     }
 }
