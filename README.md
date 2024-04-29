@@ -11,18 +11,6 @@ A Medical Appointment System built in Onion Architecture based on the following 
 
 This project is designed to offer practical experience with various technologies and concepts including ASP.NET Core, SQL Server, ASP.NET Core APIs, Identity Core, JWT Authentication and Authorization, Entity Framework, and Onion Architecture.
 
-## Getting Started
-
-To get started with this updated project, follow these steps:
-
-1. **Install .NET Core 6**: If you haven't already installed .NET Core 6, you can download and install it from the official website:
-   - [Download .NET](https://dotnet.microsoft.com/download)
-2. Clone the repository to your local development environment.
-3. Open the Package Manager Console in Visual Studio (or use the command-line equivalent) and run the following command to create the database tables based on the migrations:
-   ```Shell
-   Update-Database
-4. Test endpoints on Postman or use the Swagger Documentation.
-
 ## Project Structure
 
 The project structure is organized as follows:
@@ -78,3 +66,15 @@ Ensure the database connection string is properly configured in the `appsettings
 - `GET /patient/book/id={timeId}`: Books an appointment for a patient by appointment ID.
 - `GET /patient/getAllBookings`: Retrieves a list of all of a patient's past and upcoming bookings.
 - `DELETE /patient/cancelBooking/id=(bookingId)	`: Cancels a patient's existing appointment by booking ID.
+
+## Getting Started
+
+To get started with this updated project, follow these steps:
+
+1. **Install .NET Core 6**: If you haven't already installed .NET Core 6, you can download and install it from the official website:
+   - [Download .NET](https://dotnet.microsoft.com/download)
+2. Clone the repository to your local development environment.
+3. Open the Package Manager Console in Visual Studio (or use the command-line equivalent) and run the following command to create the database tables based on the migrations:
+   ```Shell
+   Update-Database
+4. Test endpoints on Postman or use the Swagger Documentation.
